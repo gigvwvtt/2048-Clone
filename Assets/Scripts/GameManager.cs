@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -26,7 +27,9 @@ public class GameManager : MonoBehaviour
     private int _round;
 
     private BlockType GetBlockTypeByValue(int value) => _types.First(t => t.Value == value);
-    
+
+    public event UnityAction<int> ScoreUpdated; 
+
     void Start()
     {
         ChangeState(GameState.GenerateLevel);
@@ -174,6 +177,8 @@ public class GameManager : MonoBehaviour
         
         RemoveBlock(baseBlock);
         RemoveBlock(mergingBlock);
+        
+        ScoreUpdated?.Invoke(baseBlock.Value * 2);
     }
 
     void RemoveBlock(Block block)
